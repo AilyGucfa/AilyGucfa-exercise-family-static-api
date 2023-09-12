@@ -57,39 +57,14 @@ def get_single_family_member(member_id):
 def create_new_member():
     member =request.json
     jackson_family.add_member(member)
-    return f"You successfully added{member['first_name']}{member['last_name']} to the list" , 200
+    return f"You successfully added {member['first_name']} {member['last_name']} to the list" , 200
 
-
-# @app.route("/member", methods=["POST"])
-# def create_new_member():
-#     try:
-#         data = request.get_json()
-
-#         # Check if the required fields are present in the JSON data
-#         required_fields = ["first_name", "last_name", "age", "lucky_numbers"]
-#         for field in required_fields:
-#             if field not in data:
-#                 raise APIException(f"'{field}' is a required field")
-
-#         # Create a new member and add them to the family
-#         new_member = {
-#             "id": jackson_family._generateId(),
-#             "first_name": data["first_name"],
-#             "last_name": data["last_name"],
-#             "age": data["age"],
-#             "lucky_numbers": data["lucky_numbers"]
-#         }
-#         jackson_family.add_member(new_member)
-
-#         return jsonify({"message": "Member added successfully"}), 201
-#     except APIException as e:
-#         return jsonify({"error": str(e)}), 400
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
-
-@app.route("/member/<int:member_id>", methods = ["DELETE"])
-def delete_member (member_id):
-    pass
+@app.route("/member/<int:member_id>", methods=["DELETE"])
+def delete_member(member_id):
+    if jackson_family.delete_member(member_id):
+        return f"You successfully deleted member with ID {member_id} from the list", 200
+    else:
+        return f"Member with ID {member_id} not found in the list", 404
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
